@@ -1,0 +1,224 @@
+pages:
+  register:
+    header: Register
+  login:
+    header: Login
+  mailing:
+    overview:
+      headers:
+        sendTestMail: Send test mail
+    sendTestMail:
+      messages:
+        success: "Test mail has been sent"
+        fail: "Could not send test mail"
+        fails:
+          noEmailAccountHasBeenSelected: "No email account has been provided for E-Mail sending"
+        defaultAccountIsNotDefined: "Default account is not defined"
+      texts:
+        general: >
+          <i>Allows to test given sending email directly without saving it in the database.<i>
+        demo: >
+          <i>
+            Allows to test given sending email directly without saving it in the database (default connection is used).
+            Keep in mind that E-mails used for testing messages sending might be banned/suspended by the Mailbox itself
+            due to excessive spamming - this will result in internal error as the mailbox will no longer be reachable.
+          <i>
+    history:
+      labels:
+        main: Sent Emails - History
+      table:
+        headers:
+          from:
+            label: From
+          subject:
+            label: Subject
+          body:
+            label: Body
+          status:
+            label: Status
+          created:
+            label: Created
+          source:
+            label: Source
+          receivers:
+            label: Receivers
+          options:
+            label: Options
+      messages:
+        success:
+          messageHasBeenSent: Message has been sent
+        errors:
+          couldNotGetAllSentEmails: Could not get all sent Emails
+          cannotReSendThisEmail: Cannot re send this email
+          errorWhileReSendingEmail: Error while re sending email
+          syntheticallyInvalidEmail: Synthetically Invalid E-Mail
+      texts:
+        general: >
+          <i>Contains all the mails in the system - in all statuses.<i>
+      preview:
+        dialog:
+          subject: Subject
+          body: Body
+    addMailAccount:
+      header:
+        main: Add mail account
+      messages:
+        success: Mail account has been added
+        invalidDataHasBeenProvided: Invalid data has been provided
+        fail: Could not add the mail account
+      texts:
+        general: >
+          <i>
+            Allows to manage the defined mail accounts.
+          <i>
+    manageMailAccounts:
+      headers:
+        main: Manage mail accounts
+      table:
+        headers:
+          host: Email account host
+          client: Client
+          name: Name
+          login: Login
+          actions: Actions
+      texts:
+        general: >
+          <i>
+            Allows to define the mail account for sending the emails.
+          <i>
+    getAllMailsAccount:
+      messages:
+        errors:
+          couldNotGetAllEmailsAccounts: Could not get all emails accounts
+    getMailClients:
+      message:
+        errors:
+          couldNotGetSupportedClients: Could not get supported client
+    removeMailAccount:
+      messages:
+        success: Mail account has been removed
+        fail:
+          noMailAccountWasFound: No mail account was found for given id
+          failedToRemove: Failed to remove webhook
+    updateMailAccount:
+      messages:
+        noMailAccountHasBeenFound: No mail account has been found
+        success: Mail account has been updated
+        fail: Failed to update
+        badRequest: Bad request
+      dialog:
+        password: Password
+  discord:
+    getAllWebhooks:
+      messages:
+        success: All webhooks have been retrieved
+        fail: Could not retrieve webhooks
+      headers:
+        main: Discord webhooks
+      allWebhooksTable:
+        headers:
+          username: Username
+          description: Description
+          webhookUrl: Webhook url
+          webhookName: Webhook name
+        singleRow:
+          tippy:
+            description: Description
+            username: Username
+        texts:
+          general: >
+            <i>Management of existing webhooks definitions. Each message inserted to the database has a relation to the
+            webhook. Upon removing the webhook, messages related to the hook are reassigned to the placeholder webhook,
+            and are additionally marked as deleted, thus will never be sent by cron.<i>
+    testMessageSending:
+      header:
+        main: Test message sending
+      success: Message has been sent
+      fail: Could not send the message
+      jsonReturnedFromDiscordServerIsMalformed: "Json returned from discord server is malformed"
+      thereWasAnIssueWhileCallingTheDiscordWebhook: "There was an issue while calling discord webhook, got httpCode: {{httpCode}}"
+      texts:
+        general: >
+          <i>Allows to test given webhook by sending message directly without saving it in the database.<i>
+    addDiscordWebhook:
+      header:
+        main: Add discord webhook
+      messages:
+        fail: Failed to add new discord webhook
+        failure:
+          webhookWithThisNameAlreadyExist: Webhook with this name already exist
+        invalidDataHasBeenProvided: Invalid data has been provided
+        success: New webhook has been added
+      texts:
+        general: >
+          <i>Allows to define webhook end point. With this messages can be sent to specified channel.<i>
+    updateDiscordWebhook:
+      messages:
+        success: Discord webhook has been updated
+        fail:
+          noDiscordWebhookWasFound: No discord webhook was found for given webhook id
+          failedToUpdate: Failed to update webhook
+    removeDiscordWebhook:
+      messages:
+        success: Discord webhook has been removed
+        fail:
+          noDiscordWebhookWasFound: No discord webhook was found for given webhook id
+          failedToRemove: Failed to remove webhook
+    history:
+      labels:
+        main: Discord Messages - History
+      table:
+        headers:
+          messageTitle:
+            label: Title
+          messageContent:
+            label: Content
+          status:
+            label: Status
+          created:
+            label: Created
+          source:
+            label: Source
+          options:
+            label: Options
+          info:
+            label: Info
+            data:
+              placeholderUser:
+                text: Placeholder user
+        rows:
+          tippyContent:
+            contentString: Content
+      messages:
+        errors:
+          couldNotGetAllMessages: Could not get all messages
+          couldNotSendMessage: Could not send the message
+          errorWhileSendingMessage: Error while sending message
+        success:
+          messageHasBeenSent: Message has been sent
+      texts:
+        general: >
+          <i>Contains all the discord messages in the system - in all statuses.<i>
+  dashboard:
+    overview:
+      widgets:
+        lastProcessedEmails:
+          header:
+            label: Last processed Emails
+          tippy:
+            bodyContent:
+              from: From
+              to: To
+              content: Content
+        lastProcessedDiscordMessages:
+          header:
+            label: Last processed Discord Messages
+          tippy:
+            bodyContent:
+              title: Title
+              content: Content
+    apiMessages:
+      getLastProcessedDiscordMessages:
+        error: Could not fetch last processed discord messages
+      getLastProcessedEmails:
+        error: Could not fetch last processed emails

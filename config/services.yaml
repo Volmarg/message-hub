@@ -1,0 +1,221 @@
+# This file is the entry point to configure your own services.
+# Files in the packages/ subdirectory configure your dependencies.
+
+# Put parameters here that don't need to change on each machine where the app is deployed
+# https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
+parameters:
+    mail.sender: 'exceptions-no-reply@message-hub.com'
+    mail.folder.path.attachments.relative: "/data/Modules/Mailing/Attachments"
+    mail.folder.path.attachments.absolute: "%kernel.project_dir%%/data/Modules/Mailing/Attachments"
+    mail.attachment.size.max.all: "5" #mb
+
+    cleanup.mail.message.older.than.days: 3
+    cleanup.mail.attachment.older.than.days: 3
+    cleanup.discord.message.older.than.days: 3
+    cleanup.discord.webhook.older.than.days: 3
+
+services:
+    # default configuration for services in *this* file
+    _defaults:
+        autowire: true      # Automatically injects dependencies in your services.
+        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+
+    # makes classes in src/ available to be used as services
+    # this creates a service per class whose id is the fully-qualified class name
+    App\:
+        resource: '../src/'
+        exclude:
+            - '../src/DependencyInjection/'
+            - '../src/Entity/'
+            - '../src/Kernel.php'
+            - '../src/Tests/'
+
+    # controllers are imported separately to make sure services can be injected
+    # as action arguments even if you don't extend any base controller class
+    App\Controller\:
+        resource: '../src/Controller/'
+        tags: ['controller.service_arguments']
+
+    services.internal.logger_service:
+        alias: App\Services\Internal\LoggerService
+
+    App\Repository\UserRepository:
+        public: true
+
+    App\Repository\Modules\Mailing\MailRepository:
+        public: true
+
+    repository.user_repository:
+        alias: App\Repository\UserRepository
+
+    repository.mail_repository:
+        alias: App\Repository\Modules\Mailing\MailRepository
+
+    App\Repository\Modules\Discord\DiscordWebhookRepository:
+        public: true
+
+    repository.discord_webhook_repository:
+        alias: App\Repository\Modules\Discord\DiscordWebhookRepository
+
+    App\Repository\Modules\Discord\DiscordMessageRepository:
+        public: true
+
+    repository.discord_message_repository:
+        alias: App\Repository\Modules\Discord\DiscordMessageRepository
+
+    App\Repository\Modules\Mailing\MailAccountRepository:
+        public: true
+
+    repository.mail_account_repository:
+        alias: App\Repository\Modules\Mailing\MailAccountRepository
+
+    App\Controller\Core\Repositories:
+        public: true
+        calls:
+            - setUserRepository: ['@repository.user_repository']
+            - setMailRepository: ['@repository.mail_repository']
+            - setDiscordWebhookRepository: ['@repository.discord_webhook_repository']
+            - setDiscordMessageRepository: ['@repository.discord_message_repository']
+            - setMailAccountRepository: ['@repository.mail_account_repository']
+
+    controller.core.repositories:
+        alias: App\Controller\Core\Repositories
+
+    App\Controller\Forms:
+        public: true
+
+    application.forms:
+        alias: App\Controller\Forms
+
+    App\Controller\System\SecurityController:
+        public: true
+
+    controller.system.security_controller:
+        alias: App\Controller\System\SecurityController
+
+    App\Controller\UserController:
+        public: true
+
+    controller.user_controller:
+        alias: App\Controller\UserController
+
+    controller.modules_mailing_mail_controller:
+        alias: App\Controller\Modules\Mailing\MailController
+
+    App\Controller\Modules\Discord\DiscordWebhookController:
+        public: true
+
+    controller.discord_webhook_controller:
+        alias: App\Controller\Modules\Discord\DiscordWebhookController
+
+    App\Controller\Modules\Discord\DiscordMessageController:
+        public: true
+
+    controller.discord_message_controller:
+        alias: App\Controller\Modules\Discord\DiscordMessageController
+
+    App\Controller\Modules\Mailing\MailAccountController:
+        public: true
+
+    controller.mailing_account_controller:
+        alias: App\Controller\Modules\Mailing\MailAccountController
+
+    App\Controller\Application:
+        calls:
+            - setTranslator: ['@translator']
+            - setForms: ['@application.forms']
+            - setRepositories: ['@controller.core.repositories']
+            - setLoggerService: ['@services.internal.logger_service']
+            - setEntityManager: ['@doctrine.orm.default_entity_manager']
+            - setConfigLoaders: ['@config_loaders']
+
+    App\Controller\Core\Controllers:
+        calls:
+            - setSecurityController: ['@controller.system.security_controller']
+            - setUserController: ['@controller.user_controller']
+            - setMailingController: ['@controller.modules_mailing_mail_controller']
+            - setDiscordWebhookController: ['@controller.discord_webhook_controller']
+            - setDiscordMessageController: ['@controller.discord_message_controller']
+            - setMailAccountController: ['@controller.mailing_account_controller']
+
+    App\Services\Internal\ConfigLoaders\SystemDataConfigLoader:
+        public: true
+        calls:
+            - setFromMail: ['%mail.sender%']
+            - setRelativeMailAttachmentsFolder: ['%mail.folder.path.attachments.relative%']
+            - setAbsoluteMailAttachmentsFolder: ['%mail.folder.path.attachments.absolute%']
+            - setGetAllAttachmentsMaxSizeMb: ['%mail.attachment.size.max.all%']
+
+    config_loader.system_data:
+        alias: App\Services\Internal\ConfigLoaders\SystemDataConfigLoader
+
+    App\Controller\Core\ConfigLoaders:
+        public: true
+        calls:
+            - setSystemDataConfigLoader: ['@config_loader.system_data']
+
+    App\Services\Internal\Cleanup\Member\MailCleanupService:
+        public: true
+        calls:
+            - setOlderThan: ['%cleanup.mail.message.older.than.days%']
+
+    App\Services\Internal\Cleanup\Member\MailAttachmentCleanupService:
+        public: true
+        calls:
+            - setOlderThan: ['%cleanup.mail.attachment.older.than.days%']
+
+    App\Services\Internal\Cleanup\Member\DiscordMessageCleanupService:
+        public: true
+        calls:
+            - setOlderThan: ['%cleanup.discord.message.older.than.days%']
+
+    App\Services\Internal\Cleanup\Member\DiscordWebhookCleanupService:
+        public: true
+        calls:
+            - setOlderThan: ['%cleanup.discord.webhook.older.than.days%']
+
+    App\Services\Internal\Cleanup\CleanupService:
+        arguments:
+          # order matters as for example, webhook should not get deleted first if it has any messages related,
+          # in that case the messages should get deleted first
+            $members: [
+                '@App\Services\Internal\Cleanup\Member\MailCleanupService',
+                '@App\Services\Internal\Cleanup\Member\MailAttachmentCleanupService',
+                '@App\Services\Internal\Cleanup\Member\DiscordMessageCleanupService',
+                '@App\Services\Internal\Cleanup\Member\DiscordWebhookCleanupService'
+            ]
+
+    config_loaders:
+        alias: App\Controller\Core\ConfigLoaders
+#        deprecated: true
+
+    # our custom login rate limiter
+    # Based on https://stackoverflow.com/a/69131167/9668115
+    app.login_rate_limiter:
+        class: Symfony\Component\Security\Http\RateLimiter\DefaultLoginRateLimiter
+        arguments:
+            # globalFactory is the limiter for IP
+            $globalFactory: '@limiter.ip_login'
+
+            # localFactory is the limiter for username+IP
+            $localFactory: '@limiter.username_ip_login'
+
+
+    Monolog\Formatter\HtmlFormatter:
+        public: true
+
+    App\Services\Internal\Log\EmailHandler:
+        arguments:
+            $messageTemplate: '@email.handler.template'
+            $level: 'error'
+            $bubble: true
+
+    'email.handler.template':
+        class: Symfony\Component\Mime\Email
+        calls:
+            - subject: ['[ERROR] Message Hub - %kernel.environment% - %%message%%']
+            - from: ['%mail.sender%']
+            - to: ['%env(ADMIN_EMAIL)%']
+
+    Symfony\Component\Mime\Email:
+        public: true

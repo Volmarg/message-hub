@@ -1,0 +1,82 @@
+forms:
+  registerForm:
+    username:
+      label: Username
+      placeholder: Your username
+    password:
+      label: Your Password
+      placeholder: Password
+    repeatPassword:
+      label: Your Password
+      placeholder: Password
+    submit:
+      label: Create user
+  loginForm:
+    username:
+      label: Username
+      placeholder: Your username
+    password:
+      label: Password
+      placeholder: Your Password
+    submit:
+      label: Sign in
+    register:
+      label: Register
+  sendTestMailForm:
+    account:
+      label: Account
+    receiver:
+      label: Receiver
+      placeholder: E-mail of this message receiver
+    messageBody:
+      label: Body
+      placeholder: The main content of the message
+    messageTitle:
+      label: Title
+      placeholder: The title of the message
+    submit:
+      label: Submit
+  addDiscordWebhookForm:
+    webhookUrl:
+      label: Webhook url
+      placeholder: Full url of Discord Webhook API Endpoint
+    webhookName:
+      label: Webhook name
+      placeholder: Name of webhook - used only internally
+    description:
+      label: Description
+      placeholder: Information text regarding given webhook
+    username:
+      label: Username
+      placeholder: Name of the user that will be show in chat
+    submit:
+      label: Submit
+  addMailAccountForm:
+    client:
+      label: Client
+      placeholder: Gmail, hotmail, etc. (provider name)
+    host:
+      label: Email account host
+      placeholder: 'Like for example: gmail.com'
+    name:
+      label: Name
+      placeholder: Unique name of the entry in database
+    login:
+      label: Login
+      placeholder: Login for the mailbox
+    password:
+      label: Password
+      placeholder: Password used to login into the mailbox
+    submit:
+      label: Submit
+  testDiscordMessageForm:
+    webhooks:
+      label: Webhooks
+    message:
+      label: Message
+      placeholder: Text to be sent to given webhook
+    title:
+      label: Title
+      placeholder: Title of the message
+    submit:
+      label: Submit

@@ -1,0 +1,19 @@
+api:
+  external:
+    general:
+      messages:
+        invalidJsonSyntax: Invalid json syntax
+        ok: Ok
+        internalServerError: Internal server error
+        badRequest: Bad request
+        notFound: Not found
+        noEntityHasBeenFound: "No entity has been found for request: {{entityClass}}"
+        fieldsViolations: 'Fields violations: {{fieldsList}}'
+  internal:
+    general:
+      messages:
+      missingParameterInRequest: "Missing parameter in request: {{parameterName}}"
+      fieldsViolations: >
+        Fields violations:
+        <br/>
+        {{fieldsList}}

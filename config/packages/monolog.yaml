@@ -1,0 +1,12 @@
+monolog:
+  channels: [deprecation]
+  handlers:
+    file_log:
+      type: rotating_file
+      max_files: 10
+      path: "%kernel.logs_dir%/%kernel.environment%/main.log"
+      level: info
+      channels: [ "!security", "!deprecation" ]
+    symfony_mailer:
+      type: service
+      id:   App\Services\Internal\Log\EmailHandler

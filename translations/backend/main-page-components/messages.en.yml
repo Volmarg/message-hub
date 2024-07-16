@@ -1,0 +1,37 @@
+mainPageComponents:
+  footer: ''
+  projectName: Message Hub
+  table:
+    searchInput:
+      label: Search
+  dialog:
+    buttons:
+      main:
+        cancel:
+          label: Cancel
+        close:
+          label: Close
+        ok:
+          label: Ok
+      update: Update
+      remove: Remove
+    texts:
+      removalConfirmation: Do you really want to remove this entry?
+      removalConfirmationDefault: |
+        Do you really want to remove this entry?<br/>
+        This is a <span class="text-danger">default</span> mailbox!
+      demoText:
+        Hello, <br/><br/>
+
+        <p>
+        Seems like this is the first time that You are logging into the project.
+        </p>
+
+        <p>
+        Please keep in mind that the <b>Demo</b> mode is turned on, thus some functionality has been limited 
+        (for example You won't be able to send any message).
+        </p>
+
+        <p>
+        This popup is shown only upon first login.
+        </p>

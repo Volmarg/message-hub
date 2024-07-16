@@ -1,0 +1,7 @@
+# [02:00 am.] Cleanup data
+CLEAN_DATA_LOG_FILE_PATH=/var/log/cron-cleanup-data.log
+0 2 * * * root cd /var/www/html/ &&  date >> $CLEAN_DATA_LOG_FILE_PATH && php bin/console mh:cron:cleanup >> $CLEAN_DATA_LOG_FILE_PATH 2>&1
+
+# [Each 1min.] Sending emails
+SEND_EMAILS_LOG_FILE_PATH=/var/log/cron-send-emails.log
+* * * * * root cd /var/www/html/ &&  date >> $SEND_EMAILS_LOG_FILE_PATH && php bin/console mh:cron:send-emails >> $SEND_EMAILS_LOG_FILE_PATH 2>&1

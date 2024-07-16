@@ -1,0 +1,21 @@
+framework:
+  rate_limiter:
+    # define 2 rate limiters (one for username+IP, the other for IP)
+    # based on https://stackoverflow.com/a/69131167/9668115
+
+    # This reads as following:
+    # Total allowed requests = 5,
+    # Grant 5 requests each 30 min before banning,
+    # Meaning that if someone will make more than 5 requests in 30 min, will get rejected in future
+    username_ip_login:
+      policy: token_bucket
+      limit: 3
+      rate: { interval: '180 minutes', amount: 3 }
+
+    # login will be blocked for certain amount of time if user from given ip address will fail to log-in
+    # This means, 5 requests max in 30 min, after that any further one gets rejected
+    # based on https://stackoverflow.com/a/69131167/9668115
+    ip_login:
+      policy: sliding_window
+      limit: 3
+      interval: '180 minutes'

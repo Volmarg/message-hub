@@ -1,0 +1,35 @@
+version: "2.4"
+services:
+  message_hub:
+    # Start the container every time that pc is restarted
+    restart: always
+    container_name: message-hub-prod
+
+    # will restart apache (without it the site won't work on HOST) + run `tail` continuously (else container will die)
+    command: sh -c "service apache2 restart && service cron start && exec tail"
+
+    # will automatically go to this folder when entering the container in interactive mode (exec -it bash)
+    working_dir: /var/www/html
+
+    # this is needed to let the docker access the HOST data, for example MYSQL
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+    # without this the container starts and exits, this is a must to keep the container alive
+    tty: true
+
+    # image used to create this container
+    build:
+      context: ./
+      dockerfile: dockerfile
+
+    # port on which will this project be locally available
+    ports:
+      - "8006:80"
+    volumes:
+      # map the local project root dir to the folder in docker
+      - ../:/var/www/html
+      - ./container-data/apache/sites/000-default.conf:/etc/apache2/sites-available/000-default.conf
+      - ./container-data/etc/php/8.1/apache2/php.ini:/etc/php/8.1/apache2/php.ini
+      - ./container-data/etc/cron.d:/etc/cron.d
+      - /usr/lib/nagios/plugins:/usr/lib/nagios/plugins

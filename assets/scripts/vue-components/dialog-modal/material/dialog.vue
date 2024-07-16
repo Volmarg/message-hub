@@ -1,0 +1,153 @@
+<!-- Template -->
+<template>
+  <div class="mdc-dialog"
+       ref="dialog"
+  >
+    <div class="mdc-dialog__container"
+         :class="{
+          'dialog-size-standard' : (dialogSize === 'standard'),
+          'dialog-size-full'     : (dialogSize === 'full'),
+        }"
+    >
+      <div class="mdc-dialog__surface"
+       :style="{
+        'min-width' : minWidth,
+        'min-height': minHeight,
+      }">
+        <div class="mdc-dialog__content" id="my-dialog-content">
+          <slot></slot>
+        </div>
+        <div class="mdc-dialog__actions">
+          <button type="button" class="mdc-button mdc-dialog__button"
+                  data-mdc-dialog-action="cancel"
+                  v-if="showCancelButton"
+          >
+            <div class="mdc-button__ripple"></div>
+            <span class="mdc-button__label modal-action-button special-text-color">{{ cancelButtonTranslatedString }}</span>
+          </button>
+          <button type="button" class="mdc-button mdc-dialog__button"
+                  :data-mdc-dialog-action="dialogDiscardAction"
+                  v-if="showConfirmationButton"
+                  @click="$emit('materialModalConfirmButtonClick')">
+            <div class="mdc-button__ripple"></div>
+            <span class="mdc-button__label modal-action-button special-text-color">{{ acceptButtonTranslatedString }}</span>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="mdc-dialog__scrim"></div>
+  </div>
+</template>
+
+
+<!-- Script -->
+<script>
+import Dialog               from "../../../libs/material/Dialog";
+import {MDCDialog}          from "@material/dialog/component";
+import TranslationsService  from "../../../core/services/TranslationsService";
+
+let translationService = new TranslationsService();
+let dialog             = new Dialog();
+
+export default {
+  emits: [
+    'materialModalConfirmButtonClick',
+  ],
+  props: {
+    dialogSize: {
+      type: [String],
+      required: false,
+      default: "standard",
+    },
+    'cancelButtonTranslationString': {
+      type     : String,
+      required : false,
+      default  : 'mainPageComponents.dialog.buttons.main.cancel.label',
+    },
+    showConfirmationButton: {
+      type:     [Boolean],
+      required: false,
+      default:  true
+    },
+    'acceptButtonTranslationString': {
+      type     : String,
+      required : false,
+      default  : 'mainPageComponents.dialog.buttons.main.ok.label',
+    },
+    'minWidth': {
+      type     : String,
+      required : false,
+      default  : '300px',
+    },
+    'minHeight': {
+      type     : String,
+      required : false,
+      default  : 'auto',
+    },
+    'hideOnError' : {
+      type     : Boolean,
+      required : false,
+      default  : true,
+    },
+    'showCancelButton' : {
+      type     : Boolean,
+      required : false,
+      default  : true,
+    }
+  },
+  data(){
+    return {
+      dialogInstance      : null | MDCDialog,
+      dialogDiscardAction : '',
+    }
+  },
+  methods: {
+    showDialog(){
+      if (null != this.dialogInstance) {
+        this.dialogInstance.open();
+      }
+    }
+  },
+  computed: {
+    cancelButtonTranslatedString: function(){
+      return translationService.getTranslationForString(this.cancelButtonTranslationString);
+    },
+    acceptButtonTranslatedString: function(){
+      return translationService.getTranslationForString(this.acceptButtonTranslationString);
+    }
+  },
+  mounted(){
+    let editActionDialogDomElement = this.$refs.dialog;
+    this.dialogInstance            = dialog.initForDomElement(editActionDialogDomElement);
+
+    if(this.hideOnError){
+      this.dialogDiscardAction = "discard";
+    }
+  }
+}
+</script>
+
+<!-- Style -->
+<style scoped lang="scss">
+.modal-action-button {
+  font-weight: bold;
+}
+
+.special-text-color {
+  color: #1c4e7f;
+}
+
+.mdc-dialog {
+  z-index: 999; //the sidebar is overlapping the modal otherwise
+}
+
+.dialog-size-standard {
+  width: auto;
+  height: auto;
+}
+
+.dialog-size-full {
+  width: 90%;
+  height: 90%;
+}
+</style>

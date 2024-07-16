@@ -1,0 +1,21 @@
+sidebar:
+  menu:
+    nodes:
+      dashboard:
+        label: Dashboard
+      mailing:
+        label: Mailing
+        history:
+          label: History
+        testSending:
+          label: Test sending
+      discord:
+        label: Discord
+        testSending:
+          label: Test sending
+        manageWebhooks:
+          label: Manage webhooks
+        history:
+          label: History
+        settings:
+          label: Settings

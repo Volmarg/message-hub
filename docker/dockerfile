@@ -1,0 +1,55 @@
+FROM ubuntu:jammy
+
+# Required else the ubuntu installation qill ask for timezone in interactive mode
+ARG DEBIAN_FRONTEND=noninteractive;
+ENV TZ="Europe/Warsaw"
+
+# Requirement to be able to install any packages at all
+RUN yes | apt-get update;
+
+# Required packages to be able to install php8.1
+RUN     yes | apt-get install software-properties-common \
+    &&  apt-get update;
+
+# Install some packages for easier work in docker
+RUN     yes | apt-get install nano \
+    &&  yes | apt-get install curl;
+
+# Install php 8.1
+RUN     add-apt-repository ppa:ondrej/php \
+    &&  yes | apt-get install lsb-release ca-certificates apt-transport-https software-properties-common \
+    &&  yes | apt-get install \
+    &&  yes | apt-get install php8.1 \
+    &&  yes | apt-get install php8.1-bcmath \
+    &&  yes | apt-get install php8.1-bz2 \
+    &&  yes | apt-get install php8.1-cgi \
+    &&  yes | apt-get install php8.1-cli \
+    &&  yes | apt-get install php8.1-common \
+    &&  yes | apt-get install php8.1-curl \
+    &&  yes | apt-get install php8.1-fpm \
+    &&  yes | apt-get install php8.1-gd \
+    &&  yes | apt-get install php8.1-intl \
+    &&  yes | apt-get install php8.1-ldap \
+    &&  yes | apt-get install php8.1-mbstring \
+    &&  yes | apt-get install php8.1-mysql \
+    &&  yes | apt-get install php8.1-opcache \
+    &&  yes | apt-get install php8.1-pgsql \
+    &&  yes | apt-get install php8.1-readline \
+    &&  yes | apt-get install php8.1-soap \
+    &&  yes | apt-get install php8.1-xdebug \
+    &&  yes | apt-get install php8.1-xml \
+    &&  yes | apt-get install php8.1-zip \
+    &&  yes | apt-get install php8.1-xdebug;
+
+# Need to expose internal container port to allow mapping it to some port that will be accesible outside of container
+EXPOSE 80
+
+# Will set the localhost as the one on which apache should run
+# However cannot restart the apache here as it will then bind itself to some other port "HELL KNOWS WHY".
+RUN printf "\n# Required to make apache run on 127.0.0.1 \nServerName localhost \n" >> /etc/apache2/apache2.conf;
+
+# Symfony routes wont work without it
+RUN a2enmod rewrite;
+
+# Crontab
+RUN yes | apt-get install cron;
