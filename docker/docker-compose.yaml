@@ -6,7 +6,7 @@ services:
     container_name: message-hub-dev
 
     # will restart apache (without it the site won't work on HOST) + run `tail` continuously (else container will die)
-    command: sh -c "service apache2 restart && exec tail"
+    command: sh -c "./docker/entrypoint.sh && exec tail"
 
     # will automatically go to this folder when entering the container in interactive mode (exec -it bash)
     working_dir: /var/www/html

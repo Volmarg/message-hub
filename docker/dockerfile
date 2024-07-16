@@ -12,7 +12,7 @@ RUN     yes | apt-get install software-properties-common \
     &&  apt-get update;
 
 # Install some packages for easier work in docker
-RUN     yes | apt-get install nano \
+RUN     yes | apt-get install nano wget \
     &&  yes | apt-get install curl;
 
 # Install php 8.1
@@ -53,3 +53,8 @@ RUN a2enmod rewrite;
 
 # Crontab
 RUN yes | apt-get install cron;
+
+# Install composer
+RUN wget https://getcomposer.org/download/2.7.7/composer.phar \
+    && mv composer.phar /usr/local/bin/composer \
+    && chmod 777 /usr/local/bin/composer;
