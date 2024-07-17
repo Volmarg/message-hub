@@ -33,7 +33,3 @@ yarn-error.log
 .*adminer.*
 ./data
 ./public/build
-
-###> lexik/jwt-authentication-bundle ###
-/config/jwt/*.pem
-###< lexik/jwt-authentication-bundle ###

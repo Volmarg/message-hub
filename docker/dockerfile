@@ -3,6 +3,7 @@ FROM ubuntu:jammy
 # Required else the ubuntu installation qill ask for timezone in interactive mode
 ARG DEBIAN_FRONTEND=noninteractive;
 ENV TZ="Europe/Warsaw"
+ENV OPENSSL_CONF=/container-conf/openssl.cnf
 
 # Requirement to be able to install any packages at all
 RUN yes | apt-get update;
