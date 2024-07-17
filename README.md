@@ -66,4 +66,10 @@ volumes:
 - the project is now reachable:
     - locally under: `127.0.0.1:8006`
     - within other voltigo-related containers under: `host.docker.internal:8006` 
-- click register, create user and all is ready (no confirmation email is sent etc.)  
+
+## Creating account
+
+- go to start page (`/`) and click `register`,
+- set user and password and confirm, 
+- all is ready (no confirmation email is sent etc.),
+- you can now log in,
