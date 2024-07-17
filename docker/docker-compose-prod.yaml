@@ -33,4 +33,3 @@ services:
       - ./container-data/etc/php/8.1/apache2/php.ini:/etc/php/8.1/apache2/php.ini
       - ./container-data/etc/cron.d:/etc/cron.d
       - /usr/lib/nagios/plugins:/usr/lib/nagios/plugins
-      - ./container-data/container-conf/openssl.cnf:/container-conf/openssl.cnf
