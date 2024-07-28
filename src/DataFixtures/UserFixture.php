@@ -45,6 +45,13 @@ class UserFixture extends Fixture
         $user->setRoles([User::ROLE_SUPER_ADMIN]);
         $user->setDisplayedUsername(self::USER_LOGIN);
 
+        # api user
+        $apiUser = new User();
+        $apiUser->setUsername("jooblo");
+        $apiUser->setRoles([User::ROLE_SUPER_ADMIN]);
+        $apiUser->setPassword($this->securityController->hashPassword(self::USER_RAW_PASSWORD)->getHashedPassword());
+
+        $manager->persist($apiUser);
         $manager->persist($user);
         $manager->flush();
     }
