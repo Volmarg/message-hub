@@ -30,7 +30,7 @@ class DiscordWebhookFixture extends Fixture implements OrderedFixtureInterface
             $discordWebhook = new DiscordWebhook();
             $discordWebhook->setDescription($this->faker->text);
             $discordWebhook->setUsername($this->faker->word);
-            $discordWebhook->setWebhookName($this->faker->word);
+            $discordWebhook->setWebhookName(uniqid($this->faker->word));
             $discordWebhook->setWebhookUrl($this->faker->url);
 
             $manager->persist($discordWebhook);
