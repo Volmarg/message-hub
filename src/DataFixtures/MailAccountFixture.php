@@ -27,7 +27,7 @@ class MailAccountFixture extends Fixture
         for( $x = 0 ; $x < self::RECORDS_COUNT; $x++ ){
             $mailAccount = new MailAccount();
             $mailAccount->setPassword($this->faker->password);
-            $mailAccount->setLogin($this->faker->userName);
+            $mailAccount->setLogin(uniqid($this->faker->userName));
             $mailAccount->setClient($this->faker->company);
             $mailAccount->setHost($this->faker->domainName);
             $mailAccount->setName($this->faker->word);
